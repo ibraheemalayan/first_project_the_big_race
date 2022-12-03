@@ -12,7 +12,7 @@ void myInit (void)
 {
 	// making background color black as first
 	// 3 arguments all are 0.0
-	glClearColor(0.1, 1, 0.5, 1.0);
+	glClearColor(0.1, 0.4, 0.5, 1.0);
 	
 	// making picture color green (in RGB mode), as middle argument is 1.0
 	glColor3f(0.0, 1.0, 0.0);
