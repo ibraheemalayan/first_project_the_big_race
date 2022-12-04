@@ -14,6 +14,7 @@ pid_t next_player_pid;
 int team_num;
 int team_signal;
 int speed;
+int player_index;
 int distance = 25;
 
 typedef void (*sighandler_t)(int);
@@ -28,11 +29,11 @@ void start_signal_catcher(int the_sig);
 void validate_args(int argc, char *argv[])
 {
 
-    if (argc < 3)
+    if (argc < 4)
     {
         errno = EINVAL;
         red_stderr();
-        perror("\nMust pass two arguments: pid of next player, team number");
+        perror("\nMust pass three arguments: pid of next player, team number, index of player");
         reset_stderr();
         exit(-1);
     }
@@ -58,6 +59,16 @@ void validate_args(int argc, char *argv[])
         exit(-1);
     };
 
+    if (!(player_index = atoi(argv[3])) || player_index > 5 || player_index < 1)
+    {
+        errno = EINVAL;
+        red_stdout();
+        printf("\nThe third argument must be the player number in the team which can be between 0 and 4, not %s", argv[3]);
+        fflush(stdout);
+        reset_stdout();
+        exit(-1);
+    };
+
     team_signal = (team_num == 1) ? SIGUSR1 : SIGUSR2;
 }
 
@@ -68,15 +79,13 @@ int main(int argc, char *argv[])
 
     init_random();
 
-    speed = rand() % 15 + 5;
-
     if (sigset(team_signal, start_signal_catcher) == -1) // FIXME keeps emitting a warning
     {
         perror("Sigset can not set team signal");
         exit(SIGQUIT);
     }
 
-    printf("\n%d: Child generated with speed=%d, next_player_pid=%d, team=%d", getpid(), speed, next_player_pid, team_num);
+    printf("\n%d: Child generated with index=%d, next_player_pid=%d, team=%d", getpid(), player_index, next_player_pid, team_num);
     fflush(stdout);
 
     while (1)
@@ -90,15 +99,24 @@ int main(int argc, char *argv[])
 void start_signal_catcher(int the_sig)
 {
 
-    // SIGUSR1 will be used for start
-    // SIGUSR2 will be used for reset
+    int start_point = player_index;
+    int end_point = (player_index) % 5 + 1;
 
-    printf("\nStart signal for pid %d in team %d was received.\n", getpid(), team_num);
+    printf("\n> %d: player %d in team %d has started running from A%d to A%d \n", getpid(), player_index, team_num, start_point, end_point);
 
     if (the_sig == team_signal)
     {
+        speed = rand() % 15 + 5;
         sleep(distance / speed);
         send_signal_to_next_player();
+        return;
+    }
+
+    // re set signal handler because it becomes SIG_DFL after each signal
+    if (sigset(team_signal, start_signal_catcher) == -1) // FIXME keeps emitting a warning
+    {
+        perror("Sigset can not reset team signal");
+        exit(SIGQUIT);
     }
 
     exit(1);

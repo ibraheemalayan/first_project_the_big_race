@@ -11,6 +11,7 @@
 #include "./std.h"
 
 #define PLAYERS_PER_TEAM 5
+#define DEFAULT_ROUNDS 5
 
 int rounds;
 int current_round = 0;
@@ -27,23 +28,21 @@ pid_t players_pids[PLAYERS_PER_TEAM * 2];
 void validate_args(int argc, char *argv[])
 {
 
-    if (argc < 2)
+    if (argc >= 2)
     {
-        errno = EINVAL;
-        red_stderr();
-        perror("\nMissing the number of childs argument");
-        reset_stderr();
-        exit(-1);
+        if (!(rounds = atoi(argv[1])))
+        {
+            errno = EINVAL;
+            red_stderr();
+            perror("\nThe first argument must be an integer");
+            reset_stderr();
+            exit(-1);
+        };
     }
-
-    if (!(rounds = atoi(argv[1])))
+    else
     {
-        errno = EINVAL;
-        red_stderr();
-        perror("\nThe first argument must be an integer");
-        reset_stderr();
-        exit(-1);
-    };
+        rounds = DEFAULT_ROUNDS;
+    }
 }
 
 int main(int argc, char *argv[])
@@ -65,6 +64,9 @@ int main(int argc, char *argv[])
     char team_arg[3];
     sprintf(team_arg, "2");
 
+    char player_index_arg[3];
+    sprintf(player_index_arg, "1");
+
     magenta_stdout();
     fflush(stdout);
 
@@ -82,7 +84,7 @@ int main(int argc, char *argv[])
         if (current_fork_pid == 0)
         {
             // execute child with next player pid as argument
-            execlp("./bin/child", "child", next_player_pid_arg, team_arg, (char *)NULL);
+            execlp("./bin/child", "child", next_player_pid_arg, team_arg, player_index_arg, (char *)NULL);
             perror("exec failure ");
             exit(-2);
         }
@@ -95,10 +97,12 @@ int main(int argc, char *argv[])
                 printf("Switching to team 1");
                 sprintf(next_player_pid_arg, "-1");
                 sprintf(team_arg, "1");
+                sprintf(player_index_arg, "%d", i % 5 + 1);
             }
             else
             {
                 sprintf(next_player_pid_arg, "%d", current_fork_pid);
+                sprintf(player_index_arg, "%d", i % 5 + 1);
             }
         }
 
@@ -126,12 +130,10 @@ int main(int argc, char *argv[])
         run_round(current_round);
     }
 
+    // kill all children
     for (i = 0; i < PLAYERS_PER_TEAM * 2; i++)
     {
-        pid_t c_id = wait(&status);
-        printf("\nchild with id %d has exited with status %d\n", c_id, status);
-        fflush(stdout);
-        sleep(1);
+        kill(players_pids[i], SIGQUIT);
     }
 
     return (0);
@@ -148,14 +150,18 @@ void signal_catcher(int the_sig)
         current_round_result++;
         if (the_sig == SIGUSR1)
         {
-            printf("\n\n!!! Team 1 has lost this round !!!\n\n");
+            red_stdout();
+            printf("\nLast player of team 1 has arrived to A1, they've lost the round\n");
+            reset_stdout();
             current_round_result = 2;
             current_round++;
             return;
         }
         else if (the_sig == SIGUSR2)
         {
-            printf("\n\n!!! Team 2 has lost this round !!!\n\n");
+            red_stdout();
+            printf("\nLast player of team 2 has arrived to A1, they've lost the round\n");
+            reset_stdout();
             current_round_result = 2;
             current_round++;
             return;
@@ -166,14 +172,18 @@ void signal_catcher(int the_sig)
     if (the_sig == SIGUSR1)
     {
         team_1_score++;
-        printf("\n\n!!! Team 1 has won this round !!!\n\n");
+        green_stdout();
+        printf("\nLast player of team 1 has arrived to A1, they've won the round !\n");
+        reset_stdout();
         current_round_result = 1;
         return;
     }
     else if (the_sig == SIGUSR2)
     {
         team_2_score++;
-        printf("\n\n!!! Team 2 has won this round !!!\n\n");
+        green_stdout();
+        printf("\nLast player of team 2 has arrived to A1, they've won the round !\n");
+        reset_stdout();
         current_round_result = 1;
         return;
     }
@@ -187,10 +197,10 @@ void run_round(running_round)
     // SIGCLD is used to start next round
 
     green_stdout();
-    printf("\n\n> Round #%d out of #%d will start in 3 second ...\n\n", current_round + 1, rounds);
+    printf("\n\n> Round #%d out of #%d will start in 2 second ...\n\n", current_round + 1, rounds);
     reset_stdout();
 
-    sleep(3);
+    sleep(2);
 
     current_round_result = 0;
 
@@ -212,7 +222,10 @@ void run_round(running_round)
     do
     {
         pause(); // this will return after a signal handler returns
+        fflush(stdout);
     } while (running_round == current_round);
 
-    printf("\n\nRound #%d finished and current scores are\n\tteam green - %d\n\t team red - %d\n\n", current_round + 1, team_1_score, team_2_score);
+    magenta_stdout();
+    printf("\n\nRound #%d finished and current scores are\n\tteam green - %d\n\tteam red - %d\n\n", current_round, team_1_score, team_2_score);
+    reset_stdout();
 }
