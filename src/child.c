@@ -103,6 +103,10 @@ void start_signal_catcher(int the_sig)
     {
         speed = rand() % 20 + 5;
         printf("\n> %d: player %d in team %d has started running with speed %d from A%d to A%d \n", getpid(), player_index, team_num, speed, start_point, end_point);
+
+        // TODO write pid and speed and index to team pipe
+        // then pause and wait for ui signal (which is the signal of the second team)
+
         sleep(distance / speed);
         send_signal_to_next_player();
         return;

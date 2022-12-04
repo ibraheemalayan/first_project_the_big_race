@@ -40,3 +40,17 @@ set follow-fork-mode child
 ```
 set follow-exec-mode new
 ```
+
+
+### TODOs
+
+* [ ] solve ui issue in ubuntu
+* [ ] draw all players as different objects
+* [ ] create pipes for communication between processes
+* [ ] pass pipes to childs and ui
+* [ ] create a function that will read the new speeds from the pipes
+* [ ] let the timer function use the new speeds
+* [ ] update styling (colors & fonts)
+
+
+
