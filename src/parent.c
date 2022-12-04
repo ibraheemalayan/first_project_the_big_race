@@ -11,9 +11,9 @@
 #include "./std.h"
 
 #define PLAYERS_PER_TEAM 5
-#define DEFAULT_ROUNDS 5
+#define DEFAULT_MAX_SCORE 5
 
-int rounds;
+int max_score;
 int current_round = 0;
 
 int current_round_result = 0;
@@ -30,7 +30,7 @@ void validate_args(int argc, char *argv[])
 
     if (argc >= 2)
     {
-        if (!(rounds = atoi(argv[1])))
+        if (!(max_score = atoi(argv[1])))
         {
             errno = EINVAL;
             red_stderr();
@@ -41,7 +41,7 @@ void validate_args(int argc, char *argv[])
     }
     else
     {
-        rounds = DEFAULT_ROUNDS;
+        max_score = DEFAULT_MAX_SCORE;
     }
 }
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     sprintf(team_arg, "2");
 
     char player_index_arg[3];
-    sprintf(player_index_arg, "1");
+    sprintf(player_index_arg, "5");
 
     magenta_stdout();
     fflush(stdout);
@@ -97,12 +97,12 @@ int main(int argc, char *argv[])
                 printf("Switching to team 1");
                 sprintf(next_player_pid_arg, "-1");
                 sprintf(team_arg, "1");
-                sprintf(player_index_arg, "%d", i % 5 + 1);
+                sprintf(player_index_arg, "%d", i);
             }
             else
             {
                 sprintf(next_player_pid_arg, "%d", current_fork_pid);
-                sprintf(player_index_arg, "%d", i % 5 + 1);
+                sprintf(player_index_arg, "%d", i);
             }
         }
 
@@ -124,11 +124,17 @@ int main(int argc, char *argv[])
         exit(SIGQUIT);
     }
 
-    for (current_round = 0; current_round < rounds;)
+    int current_bigger_score = 0;
+
+    current_round = 0;
+
+    do
     {
+        current_bigger_score = get_max_score();
         green_stdout();
         run_round(current_round);
-    }
+
+    } while (current_bigger_score < max_score - 1);
 
     // kill all children
     for (i = 0; i < PLAYERS_PER_TEAM * 2; i++)
@@ -147,13 +153,11 @@ void signal_catcher(int the_sig)
 
     if (current_round_result == 1)
     {
-        current_round_result++;
         if (the_sig == SIGUSR1)
         {
             red_stdout();
             printf("\nLast player of team 1 has arrived to A1, they've lost the round\n");
             reset_stdout();
-            current_round_result = 2;
             current_round++;
             return;
         }
@@ -162,7 +166,6 @@ void signal_catcher(int the_sig)
             red_stdout();
             printf("\nLast player of team 2 has arrived to A1, they've lost the round\n");
             reset_stdout();
-            current_round_result = 2;
             current_round++;
             return;
         }
@@ -197,10 +200,10 @@ void run_round(running_round)
     // SIGCLD is used to start next round
 
     green_stdout();
-    printf("\n\n> Round #%d out of #%d will start in 2 second ...\n\n", current_round + 1, rounds);
+    printf("\n\n> Round #%d will start in 1 second ...\n\n", current_round + 1);
     reset_stdout();
 
-    sleep(2);
+    sleep(1);
 
     current_round_result = 0;
 
@@ -228,4 +231,9 @@ void run_round(running_round)
     magenta_stdout();
     printf("\n\nRound #%d finished and current scores are\n\tteam green - %d\n\tteam red - %d\n\n", current_round, team_1_score, team_2_score);
     reset_stdout();
+}
+
+int get_max_score()
+{
+    return team_1_score > team_2_score ? team_1_score : team_2_score;
 }
