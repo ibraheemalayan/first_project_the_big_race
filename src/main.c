@@ -1,4 +1,4 @@
-#include <GL/glut.h>  // GLUT, include glu.h and gl.h
+#include <GL/glut.h> // GLUT, include glu.h and gl.h
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -279,4 +279,5 @@ int main(int argc, char** argv) {
    background();//Background colore 
    glutMainLoop();// Enter the event-processing loop
    return 0;
+
 }
