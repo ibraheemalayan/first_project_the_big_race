@@ -33,9 +33,10 @@ run_cli: compile_cli;
 
 debug_compile_cli:
 	@echo "Compiling CLI with -g ..."
-	gcc ${main_cli_file_name} -g -lGL -lGLU -lglut -lm -o bin/main_debug_cli
+	gcc ${main_cli_file_name} -g -lGL -lGLU -lglut -lm -o bin/main_cli
+	gcc ${child_cli_file_name} -g -lm -o bin/child
 
 debug: debug_compile_cli;
 	@echo "Running GDB..."
-	gdb --args ./bin/main_debug_cli $(RUN_ARGS)
+	gdb --args ./bin/main_cli $(RUN_ARGS)
     
