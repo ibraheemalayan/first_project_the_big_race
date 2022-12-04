@@ -13,3 +13,10 @@ to make the project portable, [Docker](https://www.docker.com) containers were u
 * Docker
 
 
+--------------------------------------
+
+to run from ssh
+
+```
+export DISPLAY=:0
+```
