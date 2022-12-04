@@ -32,3 +32,13 @@ int main()
 
     return(0);
 }
+
+
+/* print string
+glColor3f (1.0, 0.0, 0.0);
+        glRasterPos2f(-240, 120); //define position on the screen
+        char *string = "Text";
+      
+      while(*string){
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *string++);
+      }*/
