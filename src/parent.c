@@ -194,16 +194,25 @@ void run_round(running_round)
 
     current_round_result = 0;
 
-    kill(players_pids[0], SIGUSR1);
-    kill(players_pids[5], SIGUSR2);
+    if (kill(players_pids[0], SIGUSR1) == -1)
+    {
+        perror("Can not send SIGUSR1 to team 1");
+        exit(-1);
+    }
+
+    if (kill(players_pids[5], SIGUSR2) == -1)
+    {
+        perror("Can not send SIGUSR2 to team 2");
+        exit(-1);
+    }
 
     printf("\n\nWaiting for round #%d to finish ...\n\n", current_round + 1);
 
     // wait for current round to finish ( finishes when both teams have finished )
-    while (running_round == current_round)
+    do
     {
         pause(); // this will return after a signal handler returns
-    }
+    } while (running_round == current_round);
 
     printf("\n\nRound #%d finished and current scores are\n\tteam green - %d\n\t team red - %d\n\n", current_round + 1, team_1_score, team_2_score);
 }
