@@ -6,14 +6,35 @@ void display();
 void background();
 void reshape(int, int);
 void timer(int);
+#include <unistd.h>
+
+#define A1 -8
+#define A2 -4
+#define A3 0
+#define A4 4
+#define A5 8
+
+
 GLuint fontOffset;
 
-// Initail state for player 1 team 1
-float x_Position_team1 = -8.0;
+// Initail state for players of  team 1
+float x_Position_team1_1 = A1;
+float x_Position_team1_2 = -4.0;
+float x_Position_team1_3 = 0.0;
+float x_Position_team1_4 = 4.0;
+float x_Position_team1_5 = 8.0;
+
+// Initail state for players of  team 2
+float x_Position_team2_1 = A1;
+float x_Position_team2_2 = -4.0;
+float x_Position_team2_3 = 0.0;
+float x_Position_team2_4 = 4.0;
+float x_Position_team2_5 = 8.0;
+
 int state_team1 = 1;
 
 // Initail state for player 1 team 2
-float x_Position_team2 = -8.0;
+float x_Position_team2 = A1;
 int state_team2 = 1;
 
 float red_players_x_positions[5];
@@ -74,37 +95,152 @@ void display()
    glVertex2f(8.0f, 0.0f);
    glEnd();
 
-   if (score1 != roundes && score2 != roundes)
+//(score1 != roundes && score2 != roundes) ||
+   if ( !(x_Position_team1_5 ==-8 && x_Position_team2_5 == -8))
    {
       // Team1 movement
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point for team 1
-      glColor3f(0.0f, 0.0f, 1.0f);
-      glVertex2f(x_Position_team1, 1.0f);
+      glColor3f(0.0f, 1.0f,0.0f);
+      glVertex2f(x_Position_team1_1, 1.0f);
       glEnd();
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 2 for team 1
+      glColor3f(1.0f, 0.0f, 1.0f);
+      glVertex2f(x_Position_team1_2, 1.0f);
+      glEnd();
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 3 for team 1
+      glColor3f(1.0f, 1.0f, 0.0f);
+      glVertex2f(x_Position_team1_3, 1.0f);
+      glEnd();   
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 4 for team 1
+      glColor3f(0.4f, 0.0f, 1.0f);
+      glVertex2f(x_Position_team1_4, 1.0f);
+      glEnd(); 
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 5 for team 1
+      glColor3f(0.0f, 1.0f, 1.0f);
+      glVertex2f(x_Position_team1_5, 1.0f);
+      glEnd(); 
 
       // Team2 movement
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point for team 1
-      glColor3f(0.0f, 1.0f, 0.0f);
-      glVertex2f(x_Position_team2, -1.0f);
+      glColor3f(0.0f, 1.0f,0.0f);
+      glVertex2f(x_Position_team2_1, -1.0f);
+      glEnd();
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 2 for team 1
+      glColor3f(1.0f, 0.0f, 1.0f);
+      glVertex2f(x_Position_team2_2, -1.0f);
+      glEnd();
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 3 for team 1
+      glColor3f(1.0f, 1.0f, 0.0f);
+      glVertex2f(x_Position_team2_3, -1.0f);
+      glEnd();   
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 4 for team 1
+      glColor3f(0.4f, 0.0f, 1.0f);
+      glVertex2f(x_Position_team2_4, -1.0f);
+      glEnd(); 
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 5 for team 1
+      glColor3f(0.0f, 1.0f, 1.0f);
+      glVertex2f(x_Position_team2_5, -1.0f);
       glEnd();
    }
    else
    {
       // Team1 movement
       glPointSize(20.0);  // Point Size in pixels
-      glBegin(GL_POINTS); // draw The point for team 1
-      glColor3f(0.0f, 0.0f, 1.0f);
-      glVertex2f(-8.0, 1.0f);
+      glBegin(GL_POINTS); // draw The point 1 for team 1
+      glColor3f(0.0f, 1.0f, 0.0f);
+      glVertex2f(-8.0f, 1.0f);
       glEnd();
+      x_Position_team1_1=-8;
+
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 2 for team 1
+      glColor3f(1.0f, 0.0f, 1.0f);
+      glVertex2f(-4.0f, 1.0f);
+      glEnd();
+      x_Position_team1_2=-4;
+
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 3 for team 1
+      glColor3f(1.0f, 1.0f, 0.0f);
+      glVertex2f(0.0f, 1.0f);
+      glEnd();   
+      x_Position_team1_3=0;
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 4 for team 1
+      glColor3f(0.4f, 0.0f, 1.0f);
+      glVertex2f(4.0f, 1.0f);
+      glEnd(); 
+      x_Position_team1_4=4;
+
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 5 for team 1
+      glColor3f(0.0f, 1.0f, 1.0f);
+      glVertex2f(8.0f, 1.0f);
+      glEnd(); 
+      x_Position_team1_5=8;
+
 
       // Team2 movement
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point for team 1
       glColor3f(0.0f, 1.0f, 0.0f);
-      glVertex2f(-8.0, -1.0f);
+      glVertex2f(-8.0f, -1.0f);
+      glEnd();            
+      x_Position_team2_1=-8;
+
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 2 for team 1
+      glColor3f(1.0f, 0.0f, 1.0f);
+      glVertex2f(-4.0f, -1.0f);
       glEnd();
+      x_Position_team2_2=-4;
+
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 3 for team 1
+      glColor3f(1.0f, 1.0f, 0.0f);
+      glVertex2f(0.0f, -1.0f);
+      glEnd();   
+      x_Position_team2_3=0;
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 4 for team 1
+      glColor3f(0.4f, 0.0f, 1.0f);
+      glVertex2f(4.0f, -1.0f);
+      glEnd(); 
+      x_Position_team2_4=4;
+
+
+      glPointSize(20.0);  // Point Size in pixels
+      glBegin(GL_POINTS); // draw The point 5 for team 1
+      glColor3f(0.0f, 1.0f, 1.0f);
+      glVertex2f(8.0f, -1.0f);
+      glEnd(); 
+      x_Position_team2_5=8;
+      
+      //Wait for the signal from paiernt 
+      //sleep(5);
+
+
    }
 
    // Print Score for team 1
@@ -175,6 +311,11 @@ void display()
       }
    }
 
+
+
+
+
+
    glutSwapBuffers(); // Display animation
 }
 
@@ -198,8 +339,7 @@ void reshape(int w, int h)
 float randomeSpeed()
 {
 
-   // srand(time(NULL));
-   float max = 0.07; // max speed
+   float max = 0.1; // max speed
    // algorithm for creating a random number
    //(float cast) (float cast)	(RAND_MAX) is a costant included in the lib time.h
    float speed = ((float)rand() / (float)(RAND_MAX)) * max;
@@ -210,55 +350,109 @@ float randomeSpeed()
 void timer(int t)
 {
    glutPostRedisplay(); // call display funation
-   if (score1 != roundes && score2 != roundes)
+   if ((score1 != roundes && score2 != roundes))
       glutTimerFunc(1000 / 60, timer, 0);
-
-   // SPEED of team2
-   switch (state_team2)
-   {
-   case 1:
-      if (x_Position_team2 < 8)
-         x_Position_team2 += 0.1;
-      else
-      {
-         state_team2 = -1;
-      }
-
-      break;
-
-   case -1:
-      if (x_Position_team2 > -8)
-         x_Position_team2 -= randomeSpeed();
-      else
-      {
-         state_team2 = 1;
-         if (score1 != roundes)
-            score2 += 1;
-      }
-      break;
-   }
-
+  // printf("%f\n",x_Position_team1_2);   
+  
+int flage_of_displacment = rand() % 2;
+  if(flage_of_displacment){
    // SPEED of team1
    switch (state_team1)
    {
    case 1:
-      if (x_Position_team1 < 8)
-         x_Position_team1 += randomeSpeed();
+   if (x_Position_team1_5 == 8){   
+      if (x_Position_team1_1 < -4 )
+         x_Position_team1_1 += randomeSpeed();
       else
+        x_Position_team1_1 = -4; 
+      if ( x_Position_team1_1== -4 ){
+         if(x_Position_team1_2 < 0)
+         x_Position_team1_2 += randomeSpeed();
+         else
+         x_Position_team1_2 = 0;
+      }
+
+      if ( x_Position_team1_2== 0 ){
+         if(x_Position_team1_3 < 4)
+         x_Position_team1_3 += randomeSpeed();
+         else
+         x_Position_team1_3 = 4;
+      }   
+
+      if ( x_Position_team1_3== 4 ){
+         if(x_Position_team1_4 < 8)
+         x_Position_team1_4 += randomeSpeed();
+         else{
+         x_Position_team1_4 = 8;
          state_team1 = -1;
+
+            }
+      }      
+      
+      }   
       break;
 
    case -1:
-      if (x_Position_team1 > -8)
-         x_Position_team1 -= randomeSpeed();
+      if (x_Position_team1_5 > A1)
+         x_Position_team1_5 -= randomeSpeed();
       else
-      {
+      {  x_Position_team1_5=A1;
          state_team1 = 1;
-         if (score2 != roundes)
+         if (x_Position_team2_5 > A1)
             score1 += 1;
       }
       break;
    }
+  }
+  else{
+    // SPEED of team2
+   switch (state_team2)
+   {
+   case 1:
+   if (x_Position_team2_5 == 8){   
+      if (x_Position_team2_1 < -4 )
+         x_Position_team2_1 += randomeSpeed();
+      else
+        x_Position_team2_1 = -4; 
+      if ( x_Position_team2_1== -4 ){
+         if(x_Position_team2_2 < 0)
+         x_Position_team2_2 += randomeSpeed();
+         else
+         x_Position_team2_2 = 0;
+      }
+
+      if ( x_Position_team2_2== 0 ){
+         if(x_Position_team2_3 < 4)
+         x_Position_team2_3 += randomeSpeed();
+         else
+         x_Position_team2_3 = 4;
+      }   
+
+      if ( x_Position_team2_3== 4 ){
+         if(x_Position_team2_4 < 8)
+         x_Position_team2_4 += randomeSpeed();
+         else{
+         x_Position_team2_4 = 8;
+         state_team2 = -1;
+
+            }
+      }      
+      
+      }   
+      break;
+
+   case -1:
+      if (x_Position_team2_5 > A1)
+         x_Position_team2_5 -= randomeSpeed();
+      else
+      {  x_Position_team2_5=A1;
+         state_team2 = 1;
+         if (x_Position_team1_5 > A1)
+            score2 += 1;
+      }
+      break;
+       }
+  }
 }
 
 // TODO
@@ -270,6 +464,7 @@ void timer(int t)
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char **argv)
 {
+   srand(time(NULL));
    glutInit(&argc, argv);                       // Initialize GLUT
    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE); // for animation
 
