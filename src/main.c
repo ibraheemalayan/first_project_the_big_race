@@ -14,27 +14,25 @@ void timer(int);
 #define A4 4
 #define A5 8
 
-
 GLuint fontOffset;
 
 // Initail state for players of  team 1
 float x_Position_team1_1 = A1;
-float x_Position_team1_2 = -4.0;
-float x_Position_team1_3 = 0.0;
-float x_Position_team1_4 = 4.0;
-float x_Position_team1_5 = 8.0;
+float x_Position_team1_2 = A2;
+float x_Position_team1_3 = A3;
+float x_Position_team1_4 = A4;
+float x_Position_team1_5 = A5;
 
 // Initail state for players of  team 2
 float x_Position_team2_1 = A1;
-float x_Position_team2_2 = -4.0;
-float x_Position_team2_3 = 0.0;
-float x_Position_team2_4 = 4.0;
-float x_Position_team2_5 = 8.0;
+float x_Position_team2_2 = A2;
+float x_Position_team2_3 = A3;
+float x_Position_team2_4 = A4;
+float x_Position_team2_5 = A5;
 
 int state_team1 = 1;
 
 // Initail state for player 1 team 2
-float x_Position_team2 = A1;
 int state_team2 = 1;
 
 float red_players_x_positions[5];
@@ -66,8 +64,8 @@ void display()
    glBegin(GL_QUADS);
    glColor3f(1.0f, 0.0f, 0.0f);
    glVertex2f(-10.0f, 10.0f);
-   glVertex2f(-4.0f, 0.0f);
-   glVertex2f(-4.0f, 0.0f);
+   glVertex2f(A2, 0.0f);
+   glVertex2f(A2, 0.0f);
    glVertex2f(-10.0f, -10.0f);
    glEnd();
    glBegin(GL_QUADS);
@@ -88,20 +86,20 @@ void display()
    glPointSize(20.0);  // Point Size in pixels
    glBegin(GL_POINTS); // draw The Main 5 points
    glColor3f(0.0f, 0.0f, 0.0f);
-   glVertex2f(-8.0f, 0.0f);
-   glVertex2f(-4.0f, 0.0f);
-   glVertex2f(0.0f, 0.0f);
-   glVertex2f(4.0f, 0.0f);
-   glVertex2f(8.0f, 0.0f);
+   glVertex2f(A1, 0.0f);
+   glVertex2f(A2, 0.0f);
+   glVertex2f(A3, 0.0f);
+   glVertex2f(A4, 0.0f);
+   glVertex2f(A5, 0.0f);
    glEnd();
 
-//(score1 != roundes && score2 != roundes) ||
-   if ( !(x_Position_team1_5 ==-8 && x_Position_team2_5 == -8))
+   //(score1 != roundes && score2 != roundes) ||
+   if (!(x_Position_team1_5 == -8 && x_Position_team2_5 == -8))
    {
       // Team1 movement
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point for team 1
-      glColor3f(0.0f, 1.0f,0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);
       glVertex2f(x_Position_team1_1, 1.0f);
       glEnd();
 
@@ -114,23 +112,23 @@ void display()
       glBegin(GL_POINTS); // draw The point 3 for team 1
       glColor3f(1.0f, 1.0f, 0.0f);
       glVertex2f(x_Position_team1_3, 1.0f);
-      glEnd();   
+      glEnd();
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 4 for team 1
       glColor3f(0.4f, 0.0f, 1.0f);
       glVertex2f(x_Position_team1_4, 1.0f);
-      glEnd(); 
+      glEnd();
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 5 for team 1
       glColor3f(0.0f, 1.0f, 1.0f);
       glVertex2f(x_Position_team1_5, 1.0f);
-      glEnd(); 
+      glEnd();
 
       // Team2 movement
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point for team 1
-      glColor3f(0.0f, 1.0f,0.0f);
+      glColor3f(0.0f, 1.0f, 0.0f);
       glVertex2f(x_Position_team2_1, -1.0f);
       glEnd();
 
@@ -143,13 +141,13 @@ void display()
       glBegin(GL_POINTS); // draw The point 3 for team 1
       glColor3f(1.0f, 1.0f, 0.0f);
       glVertex2f(x_Position_team2_3, -1.0f);
-      glEnd();   
+      glEnd();
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 4 for team 1
       glColor3f(0.4f, 0.0f, 1.0f);
       glVertex2f(x_Position_team2_4, -1.0f);
-      glEnd(); 
+      glEnd();
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 5 for team 1
       glColor3f(0.0f, 1.0f, 1.0f);
@@ -164,83 +162,74 @@ void display()
       glColor3f(0.0f, 1.0f, 0.0f);
       glVertex2f(-8.0f, 1.0f);
       glEnd();
-      x_Position_team1_1=-8;
-
+      x_Position_team1_1 = -8;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 2 for team 1
       glColor3f(1.0f, 0.0f, 1.0f);
-      glVertex2f(-4.0f, 1.0f);
+      glVertex2f(A2, 1.0f);
       glEnd();
-      x_Position_team1_2=-4;
-
+      x_Position_team1_2 = A2;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 3 for team 1
       glColor3f(1.0f, 1.0f, 0.0f);
-      glVertex2f(0.0f, 1.0f);
-      glEnd();   
-      x_Position_team1_3=0;
+      glVertex2f(A3, 1.0f);
+      glEnd();
+      x_Position_team1_3 = 0;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 4 for team 1
       glColor3f(0.4f, 0.0f, 1.0f);
       glVertex2f(4.0f, 1.0f);
-      glEnd(); 
-      x_Position_team1_4=4;
-
+      glEnd();
+      x_Position_team1_4 = 4;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 5 for team 1
       glColor3f(0.0f, 1.0f, 1.0f);
       glVertex2f(8.0f, 1.0f);
-      glEnd(); 
-      x_Position_team1_5=8;
-
+      glEnd();
+      x_Position_team1_5 = 8;
 
       // Team2 movement
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point for team 1
       glColor3f(0.0f, 1.0f, 0.0f);
       glVertex2f(-8.0f, -1.0f);
-      glEnd();            
-      x_Position_team2_1=-8;
-
+      glEnd();
+      x_Position_team2_1 = -8;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 2 for team 1
       glColor3f(1.0f, 0.0f, 1.0f);
-      glVertex2f(-4.0f, -1.0f);
+      glVertex2f(A2, -1.0f);
       glEnd();
-      x_Position_team2_2=-4;
-
+      x_Position_team2_2 = A2;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 3 for team 1
       glColor3f(1.0f, 1.0f, 0.0f);
-      glVertex2f(0.0f, -1.0f);
-      glEnd();   
-      x_Position_team2_3=0;
+      glVertex2f(A3, -1.0f);
+      glEnd();
+      x_Position_team2_3 = 0;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 4 for team 1
       glColor3f(0.4f, 0.0f, 1.0f);
       glVertex2f(4.0f, -1.0f);
-      glEnd(); 
-      x_Position_team2_4=4;
-
+      glEnd();
+      x_Position_team2_4 = 4;
 
       glPointSize(20.0);  // Point Size in pixels
       glBegin(GL_POINTS); // draw The point 5 for team 1
       glColor3f(0.0f, 1.0f, 1.0f);
       glVertex2f(8.0f, -1.0f);
-      glEnd(); 
-      x_Position_team2_5=8;
-      
-      //Wait for the signal from paiernt 
-      //sleep(5);
+      glEnd();
+      x_Position_team2_5 = 8;
 
-
+      // Wait for the signal from paiernt
+      // sleep(5);
    }
 
    // Print Score for team 1
@@ -311,11 +300,6 @@ void display()
       }
    }
 
-
-
-
-
-
    glutSwapBuffers(); // Display animation
 }
 
@@ -352,107 +336,117 @@ void timer(int t)
    glutPostRedisplay(); // call display funation
    if ((score1 != roundes && score2 != roundes))
       glutTimerFunc(1000 / 60, timer, 0);
-  // printf("%f\n",x_Position_team1_2);   
-  
-int flage_of_displacment = rand() % 2;
-  if(flage_of_displacment){
-   // SPEED of team1
-   switch (state_team1)
+   // printf("%f\n",x_Position_team1_2);
+
+   int flage_of_displacment = rand() % 2;
+   if (flage_of_displacment)
    {
-   case 1:
-   if (x_Position_team1_5 == 8){   
-      if (x_Position_team1_1 < -4 )
-         x_Position_team1_1 += randomeSpeed();
-      else
-        x_Position_team1_1 = -4; 
-      if ( x_Position_team1_1== -4 ){
-         if(x_Position_team1_2 < 0)
-         x_Position_team1_2 += randomeSpeed();
-         else
-         x_Position_team1_2 = 0;
-      }
-
-      if ( x_Position_team1_2== 0 ){
-         if(x_Position_team1_3 < 4)
-         x_Position_team1_3 += randomeSpeed();
-         else
-         x_Position_team1_3 = 4;
-      }   
-
-      if ( x_Position_team1_3== 4 ){
-         if(x_Position_team1_4 < 8)
-         x_Position_team1_4 += randomeSpeed();
-         else{
-         x_Position_team1_4 = 8;
-         state_team1 = -1;
-
+      // SPEED of team1
+      switch (state_team1)
+      {
+      case 1:
+         if (x_Position_team1_5 == 8)
+         {
+            if (x_Position_team1_1 < A2)
+               x_Position_team1_1 += randomeSpeed();
+            else
+               x_Position_team1_1 = A2;
+            if (x_Position_team1_1 == A2)
+            {
+               if (x_Position_team1_2 < 0)
+                  x_Position_team1_2 += randomeSpeed();
+               else
+                  x_Position_team1_2 = 0;
             }
-      }      
-      
-      }   
-      break;
 
-   case -1:
-      if (x_Position_team1_5 > A1)
-         x_Position_team1_5 -= randomeSpeed();
-      else
-      {  x_Position_team1_5=A1;
-         state_team1 = 1;
-         if (x_Position_team2_5 > A1)
-            score1 += 1;
-      }
-      break;
-   }
-  }
-  else{
-    // SPEED of team2
-   switch (state_team2)
-   {
-   case 1:
-   if (x_Position_team2_5 == 8){   
-      if (x_Position_team2_1 < -4 )
-         x_Position_team2_1 += randomeSpeed();
-      else
-        x_Position_team2_1 = -4; 
-      if ( x_Position_team2_1== -4 ){
-         if(x_Position_team2_2 < 0)
-         x_Position_team2_2 += randomeSpeed();
-         else
-         x_Position_team2_2 = 0;
-      }
-
-      if ( x_Position_team2_2== 0 ){
-         if(x_Position_team2_3 < 4)
-         x_Position_team2_3 += randomeSpeed();
-         else
-         x_Position_team2_3 = 4;
-      }   
-
-      if ( x_Position_team2_3== 4 ){
-         if(x_Position_team2_4 < 8)
-         x_Position_team2_4 += randomeSpeed();
-         else{
-         x_Position_team2_4 = 8;
-         state_team2 = -1;
-
+            if (x_Position_team1_2 == 0)
+            {
+               if (x_Position_team1_3 < 4)
+                  x_Position_team1_3 += randomeSpeed();
+               else
+                  x_Position_team1_3 = 4;
             }
-      }      
-      
-      }   
-      break;
 
-   case -1:
-      if (x_Position_team2_5 > A1)
-         x_Position_team2_5 -= randomeSpeed();
-      else
-      {  x_Position_team2_5=A1;
-         state_team2 = 1;
+            if (x_Position_team1_3 == 4)
+            {
+               if (x_Position_team1_4 < 8)
+                  x_Position_team1_4 += randomeSpeed();
+               else
+               {
+                  x_Position_team1_4 = 8;
+                  state_team1 = -1;
+               }
+            }
+         }
+         break;
+
+      case -1:
          if (x_Position_team1_5 > A1)
-            score2 += 1;
+            x_Position_team1_5 -= randomeSpeed();
+         else
+         {
+            x_Position_team1_5 = A1;
+            state_team1 = 1;
+            if (x_Position_team2_5 > A1)
+               score1 += 1;
+         }
+         break;
       }
-      break;
-       }
-  }
+   }
+   else
+   {
+      // SPEED of team2
+      switch (state_team2)
+      {
+      case 1:
+         if (x_Position_team2_5 == 8)
+         {
+            if (x_Position_team2_1 < A2)
+               x_Position_team2_1 += randomeSpeed();
+            else
+               x_Position_team2_1 = A2;
+            if (x_Position_team2_1 == A2)
+            {
+               if (x_Position_team2_2 < 0)
+                  x_Position_team2_2 += randomeSpeed();
+               else
+                  x_Position_team2_2 = 0;
+            }
+
+            if (x_Position_team2_2 == 0)
+            {
+               if (x_Position_team2_3 < 4)
+                  x_Position_team2_3 += randomeSpeed();
+               else
+                  x_Position_team2_3 = 4;
+            }
+
+            if (x_Position_team2_3 == 4)
+            {
+               if (x_Position_team2_4 < 8)
+                  x_Position_team2_4 += randomeSpeed();
+               else
+               {
+                  x_Position_team2_4 = 8;
+                  state_team2 = -1;
+               }
+            }
+         }
+         break;
+
+      case -1:
+         if (x_Position_team2_5 > A1)
+            x_Position_team2_5 -= randomeSpeed();
+         else
+         {
+            x_Position_team2_5 = A1;
+            state_team2 = 1;
+            if (x_Position_team1_5 > A1)
+               score2 += 1;
+         }
+         break;
+      }
+   }
 }
 
 // TODO
