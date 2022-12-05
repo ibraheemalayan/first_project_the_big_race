@@ -51,6 +51,3 @@ set follow-exec-mode new
 * [ ] create a function that will read the new speeds from the pipes
 * [ ] let the timer function use the new speeds
 * [ ] update styling (colors & fonts)
-
-
-
