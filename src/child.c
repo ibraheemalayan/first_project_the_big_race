@@ -1,14 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <signal.h>
-#include <time.h>
-#include <errno.h>
 
 #include "./std.h"
+#include "./include.h"
+
 
 pid_t next_player_pid;
 int team_num;
@@ -16,6 +9,11 @@ int team_signal;
 int speed;
 int player_index;
 int distance = 25;
+
+int fifoTeamOne, fifoTeamTwo;
+struct message msg;
+
+
 
 typedef void (*sighandler_t)(int);
 
@@ -108,6 +106,8 @@ void start_signal_catcher(int the_sig)
         // then pause and wait for ui signal (which is the signal of the second team)
 
         sleep(distance / speed);
+        msg.playerPid=getpid();
+        msg.speed=speed;
         send_signal_to_next_player();
         return;
     }
