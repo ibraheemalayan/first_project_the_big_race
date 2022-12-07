@@ -6,7 +6,10 @@ A simple racing simulation, written in C & OpenGL.
 
 ## Demo
 
-![demo video](statics/demo.mp4)
+
+
+https://user-images.githubusercontent.com/35265448/206225598-feb7be86-02b9-4546-869c-a7d80c005b34.mp4
+
 
 
 ## Installation
