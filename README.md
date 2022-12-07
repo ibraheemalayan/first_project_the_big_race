@@ -1,29 +1,37 @@
-# The Big Race
+# The Big Race 🏎️
 
-A simple racing simulation, written in C & OpenGL. 
+A multi-processing race simulation, written in C & OpenGL, using signals & named pipes. 
 
 > this project is a part of the **Real Time Applications & Embedded Systems (ENCS4330)** course at [BZU](https://www.birzeit.edu).
 
-## Demo
-
-
+## Demo 🔥
 
 https://user-images.githubusercontent.com/35265448/206225598-feb7be86-02b9-4546-869c-a7d80c005b34.mp4
 
-
+## Authors
+* Ibraheem Alyan: 1201180
+* Mohammad Mualla: 1180546
 
 ## Installation
 
-to make the project portable, [Docker](https://www.docker.com) containers were used as a runtime enviroment.
+### Prerequisites ✅
+* Docker : to make the project portable, [Docker](https://www.docker.com) containers were used as a runtime enviroment.
 
-### Prerequisites
-
-* Docker
 * VNC client
 
-### Running the project
+### Setup ⚙️
 
-1. setup the container
+> the folowing commands are intended to be run in a bash shell
+
+1. clone the repository
+    ```bash
+    git clone https://github.com/ibraheemalayan/first_project_the_big_race.git real_time_project
+    cd real_time_project
+    mkdir src/bin
+    ```
+
+
+2. setup the container
     * windows
         ```bash
         bash windows_setup.sh
@@ -32,10 +40,10 @@ to make the project portable, [Docker](https://www.docker.com) containers were u
         ```bash
         bash setup_container.sh
         ```
-2. connect the VNC client to the url shown in the output od the setup script (password is `headless`)
+3. connect the VNC client to the url shown in the output of the setup script (password is `headless`)
 
 
-3. inside the container shell, run the intended make command.
+4. inside the container shell, run the intended make command.
 
 
 > Note: before running the gui from an ssh session
@@ -44,9 +52,9 @@ to make the project portable, [Docker](https://www.docker.com) containers were u
 > export DISPLAY=:0
 > ```
 
-### Available Make Commands
+### Usage ▶️
 
-> makeFile is inside the `src` directory
+> the makefile is inside the `src` directory
 
 Available make commands:
 
@@ -87,8 +95,8 @@ set follow-exec-mode new
 * [X] let the timer function use the new speeds
 * [X] update styling (colors & fonts)
 * [X] document make available commands
-* [ ] add contributors names/ids
-* [ ] add a demo GIF in this README
+* [X] add contributors names/ids
+* [X] add a demo GIF in this README
 
 
 

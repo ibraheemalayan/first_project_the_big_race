@@ -43,7 +43,7 @@ void stop_gui_process()
 {
     kill(gui_pid, UISIG); // send finish signal
 
-    sleep(5);
+    sleep(60);
 
     kill(gui_pid, SIGQUIT); // send stop signal
 }

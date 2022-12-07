@@ -18,7 +18,7 @@ struct pipe_message team_2_message;
 void game_finished_signal_handler(int s)
 {
 
-    printf("Game finished signal received !\n");
+    printf("Game finished signal received !, will terminate in 60 seconds...\n");
     close_pipes();
 
     game_finished = 1;

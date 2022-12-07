@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 void display();
 void background();
 void reshape(int, int);
@@ -44,17 +45,11 @@ int currently_moving_player_team_2 = 0;
 int moving_player_team_1_before_update = -1;
 int moving_player_team_2_before_update = -1;
 
-// Scores FIXME TODO
-char scores[6] = "012345";
-
 // Top roundes number
 int roundes = 2;
 
-// Score of team 1
-int score1 = 0;
-
-// Score of team 2
-int score2 = 0;
+// Score of team 1 and 2
+int score1 = 0, score2 = 0;
 
 void draw_rect(float x, float y, float size, int R, int G, int B);
 void update_team_1_speed();
@@ -190,15 +185,28 @@ void display()
    }
 
    // Print Score for team 1
+   char score_1_buffer[3];
+   sprintf(score_1_buffer, "%d", score1);
+
+   char score_2_buffer[3];
+   sprintf(score_2_buffer, "%d", score2);
+
+   // Print Score for team 1
    glColor3ub(0, 122, 61);   // palestine flag greed
    glRasterPos2f(-4.0, 4.0); // define position on the screen
-   glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, scores[score1]);
+   for (size_t i = 0; i < 2; i++)
+   {
+      glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, score_1_buffer[i]);
+   }
    glEnd();
 
    // Print Score for team 2
    glColor3f(0.0, 0.0, 0.0);
    glRasterPos2f(-4.0, -4.0); // define position on the screen
-   glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, scores[score2]);
+   for (size_t i = 0; i < 2; i++)
+   {
+      glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, score_2_buffer[i]);
+   }
    glEnd();
 
    // print string "The big race"
