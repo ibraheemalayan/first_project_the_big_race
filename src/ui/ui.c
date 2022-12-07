@@ -48,9 +48,6 @@ int moving_player_team_2_before_update = -1;
 
 int game_finished = 0;
 
-// Scores FIXME TODO
-char scores[10] = "0123456789";
-
 // Top max_score number
 int max_score = DEFAULT_MAX_SCORE;
 
@@ -179,15 +176,28 @@ void display()
     }
 
     // Print Score for team 1
+    char score_1_buffer[3];
+    sprintf(score_1_buffer, "%d", score1);
+
+    char score_2_buffer[3];
+    sprintf(score_2_buffer, "%d", score2);
+
+    // Print Score for team 1
     glColor3ub(0, 122, 61);   // palestine flag greed
     glRasterPos2f(-4.0, 4.0); // define position on the screen
-    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, scores[score1]);
+    for (size_t i = 0; i < 2; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, score_1_buffer[i]);
+    }
     glEnd();
 
     // Print Score for team 2
     glColor3f(0.0, 0.0, 0.0);
     glRasterPos2f(-4.0, -4.0); // define position on the screen
-    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, scores[score2]);
+    for (size_t i = 0; i < 2; i++)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, score_2_buffer[i]);
+    }
     glEnd();
 
     // print string "The big race"
