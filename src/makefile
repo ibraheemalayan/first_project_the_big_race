@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := run_cli
+.DEFAULT_GOAL := run
 
 # use the rest as arguments for "run"
 RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
