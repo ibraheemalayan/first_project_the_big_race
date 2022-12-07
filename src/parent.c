@@ -2,15 +2,12 @@
 #include "./std.h"
 #include "./include.h"
 
-
-
 int max_score;
 int current_round = 0;
 
 int current_round_result = 0;
 
 int team_1_score = 0, team_2_score = 0;
-
 
 void signal_catcher(int the_sig);
 
@@ -40,7 +37,7 @@ void validate_args(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 
-    //Create Teams Fifos 
+    // Create Teams Fifos
     createFifos();
 
     srand(time(NULL)); // Initialization, should only be called once.
@@ -233,21 +230,21 @@ int get_max_score()
     return team_1_score > team_2_score ? team_1_score : team_2_score;
 }
 
-void createFifos(){
+void createFifos()
+{
 
-    //TODO [Replace with mkfifo]
-    //Generate the TEAM1FIFO
-  if ( (mknod(TEAM1FIFO, S_IFIFO | 0666, 0)) == -1) {
-    perror("Error");
-    exit(-1);
-  }
+    // TODO [Replace with mkfifo]
+    // Generate the TEAM1FIFO
+    if ((mknod(TEAM1FIFO, S_IFIFO | 0666, 0)) == -1)
+    {
+        perror("Error Creating Fifo");
+        exit(-1);
+    }
 
-  // Generate the  TEAM2FIFOFIFO 
-  if ( (mknod(TEAM2FIFO, S_IFIFO | 0666, 0)) == -1) {
-    perror("Error");
-    exit(-1);
-  }
-
-
-
+    // Generate the  TEAM2FIFOFIFO
+    if ((mknod(TEAM2FIFO, S_IFIFO | 0666, 0)) == -1)
+    {
+        perror("Error Creating Fifo");
+        exit(-1);
+    }
 }
