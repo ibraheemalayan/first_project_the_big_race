@@ -11,22 +11,37 @@ to make the project portable, [Docker](https://www.docker.com) containers were u
 ### Prerequisites
 
 * Docker
+* VNC client
+
+### Running the project
+
+* windows
+    ```bash
+    bash windows_setup.sh
+    ```
+* unix/linux
+    ```bash
+    bash setup_container.sh
+    ```
+
+Then inside the container, run the intended make command.
 
 
---------------------------------------
-
-to run gui from an ssh session
-
-```
-export DISPLAY=:0
-```
+> Note: to run gui from an ssh session
+> 
+> ```
+> export DISPLAY=:0
+> ```
 
 ### Make Commands
 
-> run the followiung commands in src directory
+> run them inside the `src` directory\
 
+Available make commands:
+
+* `make run_gui` - run the standalone gui code with default number of rounds
 * `make run_cli <num_of_rounds>` - run the project in cli mode
-* `make debug <num_of_rounds>` - run the project in debug mode (gdb)
+* `make debug <num_of_rounds>` - run the project in debug mode (inside gdb)
 
 ### Debugging in gdb
 
@@ -44,10 +59,10 @@ set follow-exec-mode new
 
 ### TODOs
 
-* [ ] solve ui issue in ubuntu
-* [ ] draw all players as different objects
+* [X] solve ui issue in ubuntu
+* [X] draw all players as different objects
 * [ ] create pipes for communication between processes
 * [ ] pass pipes to childs and ui
 * [ ] create a function that will read the new speeds from the pipes
-* [ ] let the timer function use the new speeds
-* [ ] update styling (colors & fonts)
+* [X] let the timer function use the new speeds
+* [X] update styling (colors & fonts)
