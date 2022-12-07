@@ -2,7 +2,6 @@
 #include "./std.h"
 #include "./include.h"
 
-
 pid_t next_player_pid;
 int team_num;
 int team_signal;
@@ -10,10 +9,10 @@ int speed;
 int player_index;
 int distance = 25;
 
+char team_fifo[20];
+int team_fifo_fd;
+
 int fifoTeamOne, fifoTeamTwo;
-struct message msg;
-
-
 
 typedef void (*sighandler_t)(int);
 
@@ -68,6 +67,7 @@ void validate_args(int argc, char *argv[])
     };
 
     team_signal = (team_num == 1) ? SIGUSR1 : SIGUSR2;
+    strcpy(team_fifo, (team_num == 1) ? TEAM1FIFO : TEAM2FIFO);
 }
 
 int main(int argc, char *argv[])
@@ -82,6 +82,11 @@ int main(int argc, char *argv[])
         perror("Sigset can not set team signal");
         exit(SIGQUIT);
     }
+    if (sigset(UISIG, handle_ui_signal) == -1) // FIXME keeps emitting a warning
+    {
+        perror("Sigset can not set the ui signal");
+        exit(SIGQUIT);
+    }
 
     while (1)
     {
@@ -89,6 +94,11 @@ int main(int argc, char *argv[])
     }
 
     return (0);
+}
+
+void handle_ui_signal(int the_sig)
+{
+    // used to allow the ui to send a signal to the player without killing him
 }
 
 void start_signal_catcher(int the_sig)
@@ -106,13 +116,32 @@ void start_signal_catcher(int the_sig)
         // then pause and wait for ui signal (which is the signal of the second team)
 
         sleep(distance / speed);
-        msg.playerPid=getpid();
-        msg.speed=speed;
+
+        struct pipe_message msg;
+
+        msg.playerPid = getpid();
+        msg.speed = speed;
+
+        /* Open the public FIFO for reading and writing */
+        if ((team_fifo_fd = open(team_fifo, O_WRONLY)) == -1)
+        {
+            perror(team_fifo);
+            exit(1);
+        }
+
+        // write the speed and pid to the team fifo
+        // - speed is used by the ui to render the speed
+        // - the pid is passed to allow the ui to tell the player when he reaches his destination
+        write(team_fifo_fd, &msg, sizeof(msg));
+
+        pause(); // wait for a signal from the ui
+
         send_signal_to_next_player();
+
         return;
     }
 
-    // re set signal handler because it becomes SIG_DFL after each signal
+    // re set signal handler because it gets removed in some unix systems after the call
     // if (sigset(team_signal, start_signal_catcher) == -1) // FIXME keeps emitting a warning
     // {
     //     perror("Sigset can not reset team signal");

@@ -22,16 +22,15 @@
 #define PLAYERS_PER_TEAM 5
 #define DEFAULT_MAX_SCORE 5
 
-
-
 #define TEAM1FIFO "/tmp/TEAM1FIFO"
 #define TEAM2FIFO "/tmp/TEAM2FIFO"
 
+#define UISIG 7
 
-struct message {
-  int    playerPid;
-  float   speed;
+struct pipe_message
+{
+  int playerPid;
+  float speed;
 };
 
 #endif
-
