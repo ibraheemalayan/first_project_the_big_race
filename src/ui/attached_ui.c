@@ -129,7 +129,7 @@ void signal_currently_moving_player_team_1()
 {
     if (team_1_message.playerPid == -1)
     {
-        printf("team 1 player pid is -1\n");
+        // printf("team 1 player pid is -1\n");
         return;
     }
 
@@ -146,7 +146,7 @@ void signal_currently_moving_player_team_2()
 {
     if (team_2_message.playerPid == -1)
     {
-        printf("team 2 player pid is -1\n");
+        // printf("team 2 player pid is -1\n");
         return;
     }
 
