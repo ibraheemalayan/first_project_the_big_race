@@ -1,6 +1,6 @@
 
-#include "./std.h"
-#include "./include.h"
+#include "../include.h"
+#include "../std.h"
 
 int max_score;
 int current_round = 0;
@@ -9,10 +9,22 @@ int current_round_result = 0;
 
 int team_1_score = 0, team_2_score = 0;
 
+int is_attached = 0;
+
+void start_gui_process();
+int get_if_attached();
+
 void signal_catcher(int the_sig);
+void createFifos();
+void stop_gui_process();
+int get_max_score();
+void run_round(int running_round);
+void validate_args(int argc, char *argv[]);
 
 // green team from 0-4 , red team 5-9
 pid_t players_pids[PLAYERS_PER_TEAM * 2];
+
+pid_t gui_pid = 0;
 
 void validate_args(int argc, char *argv[])
 {
@@ -39,6 +51,8 @@ int main(int argc, char *argv[])
 
     // Create Teams Fifos
     createFifos();
+
+    is_attached = get_if_attached();
 
     srand(time(NULL)); // Initialization, should only be called once.
 
@@ -76,7 +90,7 @@ int main(int argc, char *argv[])
         if (current_fork_pid == 0)
         {
             // execute child with next player pid as argument
-            execlp("./bin/child", "child", next_player_pid_arg, team_arg, player_index_arg, (char *)NULL);
+            execlp((is_attached) ? "./bin/attached_child" : "./bin/child", "child", next_player_pid_arg, team_arg, player_index_arg, (char *)NULL);
             perror("exec failure ");
             exit(-2);
         }
@@ -116,23 +130,34 @@ int main(int argc, char *argv[])
         exit(SIGQUIT);
     }
 
+    start_gui_process();
+
     int current_bigger_score = 0;
 
     current_round = 0;
 
     do
     {
-        current_bigger_score = get_max_score();
         green_stdout();
         run_round(current_round);
+        current_bigger_score = get_max_score();
 
-    } while (current_bigger_score < max_score - 1);
+    } while (current_bigger_score != max_score);
 
     // kill all children
     for (i = 0; i < PLAYERS_PER_TEAM * 2; i++)
     {
         kill(players_pids[i], SIGQUIT);
     }
+
+    if (gui_pid != 0)
+    {
+        stop_gui_process();
+    }
+
+    // remove pipes if they exist
+    remove(TEAM1FIFO);
+    remove(TEAM2FIFO);
 
     return (0);
 }
@@ -151,6 +176,10 @@ void signal_catcher(int the_sig)
             printf("\nLast player of team 1 has arrived to A1, they've lost the round\n");
             reset_stdout();
             current_round++;
+            if (gui_pid)
+            {
+                kill(gui_pid, SIGUSR2);
+            }
             return;
         }
         else if (the_sig == SIGUSR2)
@@ -159,34 +188,43 @@ void signal_catcher(int the_sig)
             printf("\nLast player of team 2 has arrived to A1, they've lost the round\n");
             reset_stdout();
             current_round++;
+            if (gui_pid)
+            {
+                kill(gui_pid, SIGUSR1);
+            }
             return;
         }
         exit(-1);
     }
-
-    if (the_sig == SIGUSR1)
+    else if (current_round_result == 0)
     {
-        team_1_score++;
-        green_stdout();
-        printf("\nLast player of team 1 has arrived to A1, they've won the round !\n");
-        reset_stdout();
-        current_round_result = 1;
-        return;
-    }
-    else if (the_sig == SIGUSR2)
-    {
-        team_2_score++;
-        green_stdout();
-        printf("\nLast player of team 2 has arrived to A1, they've won the round !\n");
-        reset_stdout();
-        current_round_result = 1;
-        return;
-    }
 
+        if (the_sig == SIGUSR1)
+        {
+            team_1_score++;
+
+            green_stdout();
+            printf("\nLast player of team 1 has arrived to A1, they've won the round !\n");
+            reset_stdout();
+            current_round_result = 1;
+            return;
+        }
+        else if (the_sig == SIGUSR2)
+        {
+            team_2_score++;
+
+            green_stdout();
+            printf("\nLast player of team 2 has arrived to A1, they've won the round !\n");
+            reset_stdout();
+            current_round_result = 1;
+            return;
+        }
+    }
+    printf("\n\n\n!!!!Error: signal_catcher() called with an unknown signal!!!!\n\n\n");
     exit(1);
 }
 
-void run_round(running_round)
+void run_round(int running_round)
 {
 
     // SIGCLD is used to start next round
@@ -195,7 +233,7 @@ void run_round(running_round)
     printf("\n\n> Round #%d will start in 1 second ...\n\n", current_round + 1);
     reset_stdout();
 
-    sleep(1);
+    usleep(100 * 1000);
 
     current_round_result = 0;
 
@@ -227,7 +265,7 @@ void run_round(running_round)
 
 int get_max_score()
 {
-    return team_1_score > team_2_score ? team_1_score : team_2_score;
+    return (team_1_score > team_2_score) ? team_1_score : team_2_score;
 }
 
 void createFifos()
@@ -235,14 +273,19 @@ void createFifos()
 
     // TODO [Replace with mkfifo]
     // Generate the TEAM1FIFO
-    if ((mknod(TEAM1FIFO, S_IFIFO | 0666, 0)) == -1)
+
+    // remove pipes if they exist
+    remove(TEAM1FIFO);
+    remove(TEAM2FIFO);
+
+    if ((mkfifo(TEAM1FIFO, S_IFIFO | 0777)) == -1)
     {
         perror("Error Creating Fifo");
         exit(-1);
     }
 
-    // Generate the  TEAM2FIFOFIFO
-    if ((mknod(TEAM2FIFO, S_IFIFO | 0666, 0)) == -1)
+    // Generate the  TEAM2FIFO
+    if ((mkfifo(TEAM2FIFO, S_IFIFO | 0777)) == -1)
     {
         perror("Error Creating Fifo");
         exit(-1);

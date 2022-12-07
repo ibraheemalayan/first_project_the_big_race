@@ -25,6 +25,9 @@
 #define TEAM1FIFO "/tmp/TEAM1FIFO"
 #define TEAM2FIFO "/tmp/TEAM2FIFO"
 
+#define MAX_SPEED_PER_FRAM 0.3
+#define FPS 120
+
 #define UISIG 7
 
 struct pipe_message

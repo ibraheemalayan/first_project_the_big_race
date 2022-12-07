@@ -1,11 +1,14 @@
 
-#include "./std.h"
-#include "./include.h"
+#include "../include.h"
+#include "../std.h"
 
 pid_t next_player_pid;
+struct pipe_message msg;
+
 int team_num;
 int team_signal;
-int speed;
+float speed;
+int sent_signal_this_round = 0;
 int player_index;
 int distance = 25;
 
@@ -17,6 +20,9 @@ int fifoTeamOne, fifoTeamTwo;
 typedef void (*sighandler_t)(int);
 
 sighandler_t sigset(int sig, sighandler_t disp);
+
+void handle_start();
+void handle_ui_signal(int the_sig);
 
 #define init_random() (srand(time(NULL) ^ (getpid() << 16)))
 
@@ -92,51 +98,21 @@ int main(int argc, char *argv[])
     {
         pause(); // wait for a signal
     }
+    printf("\n\n\nA Player Died !!!!!! \n\n\n");
+    fflush(stdout);
 
     return (0);
-}
-
-void handle_ui_signal(int the_sig)
-{
-    // used to allow the ui to send a signal to the player without killing him
 }
 
 void start_signal_catcher(int the_sig)
 {
 
-    int start_point = player_index;
-    int end_point = (player_index) % 5 + 1;
-
     if (the_sig == team_signal)
     {
-        speed = rand() % 20 + 5;
-        printf("\n> %d: player %d in team %d has started running with speed %d from A%d to A%d \n", getpid(), player_index, team_num, speed, start_point, end_point);
 
-        // TODO write pid and speed and index to team pipe
-        // then pause and wait for ui signal (which is the signal of the second team)
+        sent_signal_this_round = 0;
 
-        sleep(distance / speed);
-
-        struct pipe_message msg;
-
-        msg.playerPid = getpid();
-        msg.speed = speed;
-
-        /* Open the public FIFO for reading and writing */
-        if ((team_fifo_fd = open(team_fifo, O_WRONLY)) == -1)
-        {
-            perror(team_fifo);
-            exit(1);
-        }
-
-        // write the speed and pid to the team fifo
-        // - speed is used by the ui to render the speed
-        // - the pid is passed to allow the ui to tell the player when he reaches his destination
-        write(team_fifo_fd, &msg, sizeof(msg));
-
-        pause(); // wait for a signal from the ui
-
-        send_signal_to_next_player();
+        handle_start();
 
         return;
     }
@@ -148,6 +124,8 @@ void start_signal_catcher(int the_sig)
     //     exit(SIGQUIT);
     // }
 
+    printf("\n\n\nA Player Died !!!!!! \n\n\n");
+    fflush(stdout);
     exit(1);
 }
 
@@ -162,4 +140,6 @@ void send_signal_to_next_player()
     {
         kill(getppid(), team_signal); // send team signal to parent
     }
+
+    sent_signal_this_round = 1;
 }
