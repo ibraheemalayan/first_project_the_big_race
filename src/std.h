@@ -1,6 +1,6 @@
 
 /*
- * local header file for Fifos
+ * local header file output
  */
 
 
